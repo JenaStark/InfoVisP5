@@ -1,0 +1,53 @@
+body {
+  font: 12px sans-serif;
+}
+.tick > line {
+	fill: none;
+	stroke: black;
+}
+.tick > text {
+	fill: black;
+}
+.detail-selected {
+	stroke: red;
+	fill:red;
+}
+
+.selected {
+	stroke: red;
+	fill:red;
+}
+.selected2 {
+	stroke: orange;
+	fill:orange;
+}
+path.domain {
+	fill: none;
+	stroke-width: 2px;
+	stroke: black;
+}
+#wrapper {
+	clear:both;
+}
+#chart1 {
+    float:left;
+}
+#chart2{
+	float:left;
+}
+#chart3 {
+	float:left;
+	margin-top: 30px;
+	margin-left: 20px;
+}
+.brush .extent {
+	fill-opacity: .1;
+	stroke: #fff;
+	shape-rendering: crispEdges;
+}
+
+.label {
+  fill: black;
+  font-size: 12px;
+}
+
