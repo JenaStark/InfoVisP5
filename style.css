@@ -29,16 +29,8 @@ path.domain {
 #wrapper {
 	clear:both;
 }
-#chart1 {
-    float:left;
-}
-#chart2{
+#chart {
 	float:left;
-}
-#chart3 {
-	float:left;
-	margin-top: 30px;
-	margin-left: 20px;
 }
 .brush .extent {
 	fill-opacity: .1;
@@ -51,3 +43,51 @@ path.domain {
   font-size: 12px;
 }
 
+strong {
+	margin-right: 5px;
+}
+
+.modal {
+	display: none; /* Hidden by default */
+	overflow: auto; /* Enable scroll if needed */
+	max-height: 600px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	margin-right: 20px;
+}
+
+.content {
+	bottom: 0;
+	background-color: #fefefe;
+}
+
+/* The Close Button */
+.close {
+	color: red;
+	float: left;
+	font-size: 24px;
+	background-color: #fefefe;
+	font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 60px;				
+    padding: 2px;				
+	font: 12px sans-serif;
+	font-weight: bold;		
+    background: lightblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;
+}
