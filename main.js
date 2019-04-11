@@ -247,6 +247,7 @@ function actualDrawGraph(xLabel, yLabel) {
     d3.selectAll("#chart > *").remove();
 	d3.selectAll('#details > *').remove()
 	d3.selectAll('#filters > *').remove();
+	d3.select('.modal').style('display', 'none')
 
     // Add new svg
     var chart = d3.select("#chart")				
@@ -309,7 +310,6 @@ function actualDrawGraph(xLabel, yLabel) {
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
 		.text(yLabel);
-	
 
 
 	// FILTERS
