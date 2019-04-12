@@ -13,14 +13,6 @@ body {
 	fill:red;
 }
 
-.selected {
-	stroke: red;
-	fill:red;
-}
-.selected2 {
-	stroke: orange;
-	fill:orange;
-}
 path.domain {
 	fill: none;
 	stroke-width: 2px;
@@ -31,11 +23,6 @@ path.domain {
 }
 #chart {
 	float:left;
-}
-.brush .extent {
-	fill-opacity: .1;
-	stroke: #fff;
-	shape-rendering: crispEdges;
 }
 
 .label {
@@ -77,7 +64,6 @@ strong {
 	cursor: pointer;
 }
 
-
 div.tooltip {	
     position: absolute;			
     text-align: center;			
@@ -89,4 +75,26 @@ div.tooltip {
     border: 0px;		
     border-radius: 8px;			
     pointer-events: none;
+}
+
+button {
+	border-radius: 12px;
+	padding: 6px 16px;
+  	text-align: center;
+  	cursor: pointer;
+  	-webkit-transition-duration: 0.4s; /* Safari */
+  	transition-duration: 0.4s;
+}
+
+button:hover {
+	background-color: #808080;
+}
+
+button:focus {
+	outline:0;
+}
+
+hr {
+    max-width: 30%;
+    margin-left: 0px;
 }

@@ -174,6 +174,7 @@ function actualDrawGraph(xLabel, yLabel) {
 	controls = ['All', 'Public', 'Private']	
 	filters
 		.append('p')
+		.text('Public/Private: ')
 		.append('select')
 		.on('change', function() {
 			if (this.value === 'All') {
