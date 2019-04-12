@@ -10,6 +10,7 @@ TODO:
 * Highlight selected college on click
 * Add Comparision of colleges and show both details and maybe graphs
 * Add styling when hovering over a college
-* Zooming
+* Zoom reset button?
 * Remove extra graphs
 * Maybe use transitions in between graphs instead of tabs?
+* maybe change placement of axis labels - kind of hard to see when overlapped.
