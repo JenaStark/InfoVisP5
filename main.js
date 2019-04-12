@@ -220,6 +220,8 @@ function drawGraph(button) {
 }
 
 function actualDrawGraph(xLabel, yLabel) {
+	xAttribute = xLabel
+	yAttribute = yLabel
 	cleanData = data
 		.filter(function (d) {
 			if (d[xLabel] == 0 || d[yLabel] == 0) {
@@ -237,11 +239,11 @@ function actualDrawGraph(xLabel, yLabel) {
 	}; 
 
     // Axis setup
-    var xScale = d3.scaleLinear().domain(xExtent).range([50, 670]);
-    var yScale = d3.scaleLinear().domain(yExtent).range([670, 30]);
+    xScale = d3.scaleLinear().domain(xExtent).range([50, 670]);
+    yScale = d3.scaleLinear().domain(yExtent).range([670, 30]);
      
-    var xAxis = d3.axisBottom().scale(xScale);
-    var yAxis = d3.axisLeft().scale(yScale);
+    xAxis = d3.axisBottom().scale(xScale);
+    yAxis = d3.axisLeft().scale(yScale);
  
    // Remove old elements from chart
     d3.selectAll("#chart > *").remove();
@@ -250,13 +252,31 @@ function actualDrawGraph(xLabel, yLabel) {
 	d3.select('.modal').style('display', 'none')
 
     // Add new svg
-    var chart = d3.select("#chart")				
+    chart = d3.select("#chart")				
 		.append('svg:svg')
 	    .attr("width",width)
 	    .attr("height",height);
 
-	 //add scatterplot points
-	var temp1= chart.selectAll("circle")
+	// Add a clipPath: everything out of this area won't be drawn. (helpful for zooming and panning)
+  	var clip = chart.append("defs").append("chart:clipPath")
+      .attr("id", "clip")
+      .append("chart:rect")
+      .attr("width", width- 80) // using scale ranges and their translation to calculate this
+      .attr("height", height- 60)
+      .attr("x", 50)
+      .attr("y", 30);
+
+	var clippedArea = chart.append('g')
+	  .attr("clip-path", "url(#clip)")
+
+	// Set zooming functionality
+	var zoom = d3.zoom()
+		.scaleExtent([1, 40])
+		.translateExtent([[-100, -100], [width + 90, height + 100]])
+		.on("zoom", updateZoom);
+
+	//add scatterplot points (only within clipped area)
+	var points = clippedArea.selectAll("circle")
 	   .data(cleanData)
 	   .enter()
 	   .append("circle")
@@ -289,7 +309,8 @@ function actualDrawGraph(xLabel, yLabel) {
 	// draw axis
     chart // or something else that selects the SVG element in your visualizations
 		.append("g") // create a group node
-		.attr("transform", "translate(0,"+ (width -30)+ ")")
+		.attr("transform", "translate(0,"+ (height-30)+ ")")
+		.attr("class", "xaxis")
 		.call(xAxis) // call the axis generator
 		.append("text")
 		.attr("class", "label")
@@ -302,6 +323,7 @@ function actualDrawGraph(xLabel, yLabel) {
     chart // or something else that selects the SVG element in your visualizations
 		.append("g") // create a group node
 		.attr("transform", "translate(50, 0)")
+		.attr("class", "yaxis")
 		.call(yAxis)
 		.append("text")
 		.attr("class", "label")
@@ -311,9 +333,9 @@ function actualDrawGraph(xLabel, yLabel) {
 		.style("text-anchor", "end")
 		.text(yLabel);
 
+	chart.call(zoom);
 
 	// FILTERS
-
 	filters = d3.select('#filters')
 
 	controls = ['All', 'Public', 'Private']	
@@ -344,5 +366,20 @@ function actualDrawGraph(xLabel, yLabel) {
 		.enter()
 		.append('option')
 			.text(d => d)
-		
+}
+
+function updateZoom() {
+  // Update Scales
+  new_yScale = d3.event.transform.rescaleY(yScale);
+  new_xScale = d3.event.transform.rescaleX(xScale);
+  gX = d3.select('.xaxis');
+  gY = d3.select('.yaxis');
+  gX.call(xAxis.scale(new_xScale));
+  gY.call(yAxis.scale(new_yScale));
+
+  // Update scatter points
+  chart
+      .selectAll("circle")
+      .attr('cx', function(d) {return new_xScale(d[xAttribute])})
+      .attr('cy', function(d) {return new_yScale(d[yAttribute])});
 }
