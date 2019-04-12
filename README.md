@@ -11,6 +11,5 @@ TODO:
 * Add Comparision of colleges and show both details and maybe graphs
 * Add styling when hovering over a college
 * Zoom reset button?
-* Remove extra graphs
 * Maybe use transitions in between graphs instead of tabs?
 * maybe change placement of axis labels - kind of hard to see when overlapped.

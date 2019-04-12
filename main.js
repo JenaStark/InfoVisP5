@@ -5,8 +5,6 @@ var data, div;
 window.onload = start;
 
 function start() {
-	// load all the data in
-
 	// Define the div for the tooltip
 	div = d3.select("body").append("div")	
 		.attr("class", "tooltip")				
@@ -17,6 +15,7 @@ function start() {
 			d3.select('.modal').style('display', 'none')
 		})
 
+	// load all the data in
 	d3.csv("colleges.csv", function(d) {
 		d3.entries(d).forEach(entry => {
 			if (!isNaN(entry.value)) {
@@ -24,17 +23,12 @@ function start() {
 			}
 		})
 		return d;
-	}, function(csv) {
-		// include all useful values to be visualized here
-	    for (var i=0; i<csv.length; ++i) {
-			csv[i].SATAverage = csv[i]['SAT Average'];
-			csv[i].AverageCost = csv[i]['Average Cost'];
-			csv[i].AdmissionRate = csv[i]['Admission Rate'];
-	    }
-	    data = csv
-	    drawDefaultGraph();
+	}, function(csv){
+		data = csv;
+		// Draw default chart
+		// Important to have this only be drawn after data is loaded so leave in this function
+		actualDrawGraph('SAT Average', 'Average Cost');
 	});
-
 }
 
 function fillDetails(datapoint, i) {
@@ -48,174 +42,13 @@ function fillDetails(datapoint, i) {
 	enterSelection.insert('span').text((d) => d.value);
 }
 
-// Graph SAT Average and Average Cost
-function drawDefaultGraph() {
-	// filter out zero values
-	cleanData = data.filter(function(d){
-        if(d.SATAverage == 0 || d.AverageCost == 0){
-            return false;
-        }
-        return true;
-    });
-
-    var satAverageExtent = d3.extent(cleanData, function(row) { return row.SATAverage; });
-    var averageCostExtent = d3.extent(cleanData, function(row) { return row.AverageCost; });
-       
-    var extents = {
-	"SATAvg": satAverageExtent,
-	"AvgCost": averageCostExtent
-    }; 
-
-    // Axis setup
-    var xScale = d3.scaleLinear().domain(satAverageExtent).range([50, 670]);
-    var yScale = d3.scaleLinear().domain(averageCostExtent).range([670, 30]);
-     
-    var xAxis = d3.axisBottom().scale(xScale);
-    var yAxis = d3.axisLeft().scale(yScale);
-
-    // Remove old elements from chart
-    d3.selectAll("#chart > *").remove();
-	d3.selectAll('#details > *').remove()
-
-    // Add new svg
-    var chart = d3.select("#chart")				
-		.append('svg:svg')
-	    .attr("width",width)
-	    .attr("height",height);
-
-	 //add scatterplot points
-     var temp1= chart.selectAll("circle")
-	   .data(cleanData)
-	   .enter()
-	   .append("circle")
-	   .attr("id",function(d,i) {return i;} )
-	   .attr("fill", function(d) {
-		   	if(d.Control == 'Public') {
-		   		return "orange";
-		   	}
-		   	return "green";
-	    })
-	   .attr("stroke", "black")
-	   .attr("cx", function(d) { return xScale(d.SATAverage); })
-	   .attr("cy", function(d) { return yScale(d.AverageCost); })
-	   .attr("r", 5)
-	   .on("click", fillDetails);
-
-	// draw axis
-    chart // or something else that selects the SVG element in your visualizations
-		.append("g") // create a group node
-		.attr("transform", "translate(0,"+ (width -30)+ ")")
-		.call(xAxis) // call the axis generator
-		.append("text")
-		.attr("class", "label")
-		.attr("x", width-16)
-		.attr("y", -6)
-		.style("text-anchor", "end")
-		.text("Average SAT");
-
-	// draw axis
-    chart // or something else that selects the SVG element in your visualizations
-		.append("g") // create a group node
-		.attr("transform", "translate(50, 0)")
-		.call(yAxis)
-		.append("text")
-		.attr("class", "label")
-		.attr("transform", "rotate(-90)")
-		.attr("y", 6)
-		.attr("dy", ".71em")
-		.style("text-anchor", "end")
-		.text("Average Cost");
-
-};
-
-// Graph SAT Average and Admission Rate
-function drawSecondGraph() {
-	// filter out zero values
-	cleanData = data.filter(function(d){
-        if(d.SATAverage == 0 || d.AdmissionRate == 0){
-            return false;
-        }
-        return true;
-    });
-
-    var satAverageExtent = d3.extent(cleanData, function(row) { return row.SATAverage; });
-    var admissionRateExtent = d3.extent(cleanData, function(row) { return row.AdmissionRate; });
-       
-    var extents = {
-	"SATAvg": satAverageExtent,
-	"admissionRate": admissionRateExtent
-    }; 
-
-    // Axis setup
-    var xScale = d3.scaleLinear().domain(satAverageExtent).range([50, 670]);
-    var yScale = d3.scaleLinear().domain(admissionRateExtent).range([670, 30]);
-     
-    var xAxis = d3.axisBottom().scale(xScale);
-    var yAxis = d3.axisLeft().scale(yScale);
- 
-   // Remove old elements from chart
-	d3.selectAll("#chart > *").remove();
-	d3.selectAll('#details > *').remove();
-
-    // Add new svg
-    var chart = d3.select("#chart")				
-		.append('svg:svg')
-	    .attr("width",width)
-	    .attr("height",height);
-
-	 //add scatterplot points
-     var temp1= chart.selectAll("circle")
-	   .data(cleanData)
-	   .enter()
-	   .append("circle")
-	   .attr("id",function(d,i) {return i;} )
-	   .attr("fill", function(d) {
-		   	if(d.Control == 'Public') {
-		   		return "orange";
-		   	}
-		   	return "green";
-	    })
-	   .attr("stroke", "black")
-	   .attr("cx", function(d) { return xScale(d.SATAverage); })
-	   .attr("cy", function(d) { return yScale(d.AdmissionRate); })
-	   .attr("r", 5)
-	   .on("click", fillDetails);
-
-	// draw axis
-    chart // or something else that selects the SVG element in your visualizations
-		.append("g") // create a group node
-		.attr("transform", "translate(0,"+ (width -30)+ ")")
-		.call(xAxis) // call the axis generator
-		.append("text")
-		.attr("class", "label")
-		.attr("x", width-16)
-		.attr("y", -6)
-		.style("text-anchor", "end")
-		.text("Average SAT");
-
-	// draw axis
-    chart // or something else that selects the SVG element in your visualizations
-		.append("g") // create a group node
-		.attr("transform", "translate(50, 0)")
-		.call(yAxis)
-		.append("text")
-		.attr("class", "label")
-		.attr("transform", "rotate(-90)")
-		.attr("y", 6)
-		.attr("dy", ".71em")
-		.style("text-anchor", "end")
-		.text("Admission Rate");
-};
-
 function drawGraph(button) {
 	if (button.id === 'retention') {
 		actualDrawGraph('Admission Rate', 'Retention Rate (First Time Students)');
 	} else if (button.id === 'income') {
 		actualDrawGraph('Average Cost', 'Average Family Income');
-	} else if (button.id === 'testid') {
-		actualDrawGraph('SAT Average', 'Average Family Income');
-	} else {
-		drawDefaultGraph();
+	} else if (button.id === 'scorecost') {
+		actualDrawGraph('SAT Average', 'Average Cost');
 	}
 }
 
@@ -261,10 +94,10 @@ function actualDrawGraph(xLabel, yLabel) {
   	var clip = chart.append("defs").append("chart:clipPath")
       .attr("id", "clip")
       .append("chart:rect")
-      .attr("width", width- 80) // using scale ranges and their translation to calculate this
-      .attr("height", height- 60)
-      .attr("x", 50)
-      .attr("y", 30);
+      .attr("width", width- 68) // using scale ranges and their translation to calculate this
+      .attr("height", height- 48)
+      .attr("x", 44)
+      .attr("y", 24);
 
 	var clippedArea = chart.append('g')
 	  .attr("clip-path", "url(#clip)")
