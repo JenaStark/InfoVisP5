@@ -188,6 +188,39 @@ function actualDrawGraph(xLabel, yLabel) {
   // FILTERS
   filters = d3.select('#filters')
 
+  // College Selector
+  filters.append('h3').text('Compare Colleges:');
+  colleges = []
+  colleges.push(...d3.set(cleanData, (d) => d.Name).values());
+
+  filters
+    .append('datalist')
+    .attr('id', 'datalist')
+    .selectAll('option')
+    .data(colleges)
+    .enter()
+    .append('option')
+        .text(d => d);
+
+  // first college
+  filters
+    .insert('strong')
+    .text('#1: ');
+  filters
+    .append('input')
+    .attr('list', 'datalist');
+
+  // second college
+  filters
+    .append('div')
+    .attr('id', 'CollegeSelector2')
+    .insert('strong')
+    .text('#2: ');
+
+  d3.select('#CollegeSelector2')
+    .append('input')
+    .attr('list', 'datalist');
+
   filters.append('h3').text('Filters: ');
 
   // Add public/private filtering
