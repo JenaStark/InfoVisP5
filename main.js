@@ -35,7 +35,7 @@ function start() {
 function fillDetails(datapoint, i) {
   d3.selectAll('#details > *').remove()
   d3.select('.modal')
-    .style('display', 'block')
+    .style('display', 'inline-block')
 
   var entries = d3.entries(datapoint);
   var enterSelection = d3.select('#details').selectAll('div').data(entries).enter().append('div')
@@ -188,10 +188,13 @@ function actualDrawGraph(xLabel, yLabel) {
   // FILTERS
   filters = d3.select('#filters')
 
+  filters.append('h3').text('Filters: ');
+
   // Add public/private filtering
   controls = ['All', 'Public', 'Private']
   filters
-    .append('span')
+    .append('div')
+    .attr('id', 'ControlDiv')
     .text('Public/Private: ')
     .append('select')
     .attr('id', 'ControlFilter')
@@ -210,7 +213,7 @@ function actualDrawGraph(xLabel, yLabel) {
   regions.push(...d3.set(cleanData, (d) => d.Region).values())
 
   filters
-    .append('span')
+    .append('div')
     .text('Region: ')
     .append('select')
     .attr('id', 'RegionFilter')

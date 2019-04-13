@@ -37,7 +37,7 @@ strong {
 .modal {
 	display: none; /* Hidden by default */
 	overflow: auto; /* Enable scroll if needed */
-	max-height: 600px;
+	max-height: 500px;
 	bottom: 0;
 	right: 0;
 	margin-right: 20px;
@@ -100,6 +100,13 @@ hr {
     margin-left: 0px;
 }
 
-#filters > span {
-	padding: 10px 10px 10px 10px;
+#filters {
+	display: inline-block;
+	margin-right: 20px;
+	vertical-align: top;
+}
+
+/* Add spacing between Control and Region Filter */
+#ControlDiv {
+	padding-bottom: 15px;
 }
