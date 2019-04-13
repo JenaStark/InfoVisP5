@@ -1,10 +1,9 @@
 # InfoVisP5				
 TODO:
-* get filters to work together --> had to remove transitions but maybe another way to do this?
+* get filters to work together --> done but had to remove transitions but maybe another way to do this?
 * smoother reset filter transition?
 * filter by cost
 * filter by scores
-* Reset filters?
 * Show x and y value details on hover, or project line on axis, or highlight x and y axis values in details view
 * Make college name more visible on details view
 * Highlight selected college on click

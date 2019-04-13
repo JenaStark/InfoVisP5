@@ -182,6 +182,7 @@ function actualDrawGraph(xLabel, yLabel) {
 		.append('span')
 		.text('Public/Private: ')
 		.append('select')
+		.attr('id', 'ControlFilter')
 		.on('change', function() {
 			setFilters.set("Control", this.value)
 			filter(chart, setFilters);
@@ -199,6 +200,7 @@ function actualDrawGraph(xLabel, yLabel) {
 		.append('span')
 		.text('Region: ')
 		.append('select')
+		.attr('id', 'RegionFilter')
 		.on('change', function() {
 			setFilters.set("Region", this.value)
 			filter(chart, setFilters);
@@ -212,8 +214,12 @@ function actualDrawGraph(xLabel, yLabel) {
 	// reset filters
 	filters.append('p')
         .append('button')
-        .text('Reset Filter')
+        .text('Reset All Filters')
         .on('click', function() {
+        	// change filter selection text to 'All'
+            document.getElementById('ControlFilter').value = 'All';
+            document.getElementById('RegionFilter').value = 'All';
+
         	// clear old filters and show all points
         	setFilters = d3.map();
             chart.selectAll('circle')
@@ -225,6 +231,7 @@ function actualDrawGraph(xLabel, yLabel) {
 
 function filter(chart, filters) {
 	circles = chart.selectAll('circle')
+	// for each filter set go through and add each one to the selection
 	filters.each(function(v, k) {
 		if (v === 'All') {
 			circles = circles
