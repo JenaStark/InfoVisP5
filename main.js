@@ -1,6 +1,7 @@
 var width =600;
 var height= 600;
 var data, div;
+var setFilters = d3.map();
 
 window.onload = start;
 
@@ -53,6 +54,8 @@ function drawGraph(button) {
 }
 
 function actualDrawGraph(xLabel, yLabel) {
+	// clear out old filters from other charts
+	setFilters = d3.map();
 	xAttribute = xLabel
 	yAttribute = yLabel
 	cleanData = data
@@ -180,7 +183,8 @@ function actualDrawGraph(xLabel, yLabel) {
 		.text('Public/Private: ')
 		.append('select')
 		.on('change', function() {
-			filter(chart, 'Control', this.value);
+			setFilters.set("Control", this.value)
+			filter(chart, setFilters);
 		})
 		.selectAll('option')
 		.data(controls)
@@ -196,33 +200,44 @@ function actualDrawGraph(xLabel, yLabel) {
 		.text('Region: ')
 		.append('select')
 		.on('change', function() {
-			filter(chart, 'Region', this.value);
+			setFilters.set("Region", this.value)
+			filter(chart, setFilters);
 		})
 		.selectAll('option')
 		.data(regions)
 		.enter()
 		.append('option')
 			.text(d => d)
+
+	// reset filters
+	filters.append('p')
+        .append('button')
+        .text('Reset Filter')
+        .on('click', function() {
+        	// clear old filters and show all points
+        	setFilters = d3.map();
+            chart.selectAll('circle')
+                .transition()
+                .duration(600)
+                .style('opacity', 1)
+        });
 }
 
-function filter(chart, filterAttribute, value) {
-	if (value === 'All') {
-		chart.selectAll('circle')
-			.transition()
-			.duration(Math.random() * 1000)
-			.style('opacity', 1)
-	} else {
-		chart.selectAll('circle')
-			.filter(d => d[filterAttribute] !== value)
-			.transition()
-			.duration(Math.random() * 1000)
-			.style('opacity', 0)
-		chart.selectAll('circle')
-			.filter(d => d[filterAttribute] === value)
-			.transition()
-			.duration(Math.random() * 1000)
-			.style('opacity', 1)
-	}
+function filter(chart, filters) {
+	circles = chart.selectAll('circle')
+	filters.each(function(v, k) {
+		if (v === 'All') {
+			circles = circles
+				.style('opacity', 1)
+		} else {
+			circles
+				.filter(d => d[k] !== v)
+				.style('opacity', 0)
+			circles = circles
+				.filter(d => d[k] === v)
+				.style('opacity', 1)
+		}
+	})
 }
 
 function updateZoom() {

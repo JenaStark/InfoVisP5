@@ -1,6 +1,7 @@
 # InfoVisP5				
 TODO:
-* get filters to work together
+* get filters to work together --> had to remove transitions but maybe another way to do this?
+* smoother reset filter transition?
 * filter by cost
 * filter by scores
 * Reset filters?
