@@ -287,6 +287,10 @@ function actualDrawGraph(xLabel, yLabel) {
       // change filter selection text to 'All'
       document.getElementById('ControlFilter').value = 'All';
       document.getElementById('RegionFilter').value = 'All';
+      document.getElementById('budgetSlider').value = null;
+      document.getElementById('scoreSlider').value = null;
+      document.getElementById('budgetVal').value = null;
+      document.getElementById('scoreVal').value = null;
 
       // clear old filters and show all points
       setFilters = d3.map();
