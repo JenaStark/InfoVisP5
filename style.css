@@ -46,6 +46,7 @@ strong {
 .content {
 	bottom: 0;
 	background-color: #fefefe;
+	margin-top: 28px;
 }
 
 /* The Close Button */
