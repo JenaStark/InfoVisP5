@@ -110,3 +110,7 @@ hr {
 #ControlDiv {
 	padding-bottom: 15px;
 }
+
+hr.style-three {
+	max-width: 100%;
+}

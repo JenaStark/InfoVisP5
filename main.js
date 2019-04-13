@@ -1,6 +1,6 @@
 var width = 600;
 var height = 600;
-var data, div;
+var data, div, selectedCircle;
 var setFilters = d3.map();
 
 window.onload = start;
@@ -12,9 +12,7 @@ function start() {
     .style("opacity", 0);
 
   d3.select('.close')
-    .on('click', () => {
-      d3.select('.modal').style('display', 'none')
-    })
+    .on('click', clearSelection)
 
   // load all the data in
   d3.csv("colleges.csv", function(d) {
@@ -32,11 +30,39 @@ function start() {
   });
 }
 
+function clearSelection() {
+  if (selectedCircle) {
+    selectedCircle
+      .attr('r', 5)
+      .attr('fill', (d) => {
+        if (d.Control == 'Public') {
+          return "orange";
+        }
+        return "green";
+      });
+    d3.select('.modal').style('display', 'none');
+    selectedCircle = null;
+  }
+}
+
 function fillDetails(datapoint, i) {
+  clearSelection();
   d3.selectAll('#details > *').remove()
   d3.select('.modal')
     .style('display', 'inline-block')
+  selectedCircle = chart.select(`[id='${i}'`)
+    .attr('r', 10)
+    .attr('fill', 'red')
+    .raise()
 
+  // Title
+  d3.select('#details')
+    .append('h2')
+    .text(datapoint['Name'])
+  d3.select('#details')
+    .append('hr')
+    .attr('class', 'style-three')
+  // Content
   var entries = d3.entries(datapoint);
   var enterSelection = d3.select('#details').selectAll('div').data(entries).enter().append('div')
   enterSelection.insert('strong').text((d) => d.key + ':')
@@ -97,7 +123,7 @@ function actualDrawGraph(xLabel, yLabel) {
   d3.selectAll("#chart > *").remove();
   d3.selectAll('#details > *').remove()
   d3.selectAll('#filters > *').remove();
-  d3.select('.modal').style('display', 'none')
+  clearSelection()
 
   // Add new svg
   chart = d3.select("#chart")
@@ -204,20 +230,23 @@ function actualDrawGraph(xLabel, yLabel) {
 
   // first college
   filters
-    .insert('strong')
-    .text('#1: ');
-  filters
+    .append('div')
+    .attr('id', 'CollegeSelector1')
+    .append('strong')
+    .text('#1: ')
+
+  filters.select('#CollegeSelector1')
     .append('input')
-    .attr('list', 'datalist');
+    .attr('list', 'datalist')
 
   // second college
   filters
     .append('div')
     .attr('id', 'CollegeSelector2')
-    .insert('strong')
+    .append('strong')
     .text('#2: ');
 
-  d3.select('#CollegeSelector2')
+  filters.select('#CollegeSelector2')
     .append('input')
     .attr('list', 'datalist');
 
