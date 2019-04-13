@@ -1,5 +1,5 @@
-var width =700;
-var height= 700;
+var width =600;
+var height= 600;
 var data, div;
 
 window.onload = start;
@@ -72,8 +72,8 @@ function actualDrawGraph(xLabel, yLabel) {
 	}; 
 
     // Axis setup
-    xScale = d3.scaleLinear().domain(xExtent).range([50, 670]);
-    yScale = d3.scaleLinear().domain(yExtent).range([670, 30]);
+    xScale = d3.scaleLinear().domain(xExtent).range([50, 570]);
+    yScale = d3.scaleLinear().domain(yExtent).range([570, 30]);
      
     xAxis = d3.axisBottom().scale(xScale);
     yAxis = d3.axisLeft().scale(yScale);
@@ -125,15 +125,17 @@ function actualDrawGraph(xLabel, yLabel) {
 	   .attr("cy", function(d) { return yScale(d[yLabel]); })
 	   .attr("r", 5)
 	   .on("click", fillDetails)
-	   .on("mouseover", function(d) {		
+	   .on("mouseover", function(d) {
+		   d3.select(this).attr('stroke', 'red').attr('stroke-width', '3px');		
 		   div.transition()
 			   .duration(200)
 			   .style("opacity", .9);
 		   div.html(d.Name + "<br/>")
-			   .style("left", (d3.event.pageX) + "px")
+			   .style("left", (d3.event.pageX + 10) + "px")
 			   .style("top", (d3.event.pageY - 40) + "px");
 	   })
 		.on("mouseout", function (d) {
+			d3.select(this).attr('stroke', 'black').attr('stroke-width', '1px');	 		
 			div.transition()
 				.duration(500)
 				.style("opacity", 0);
