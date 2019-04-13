@@ -171,35 +171,56 @@ function actualDrawGraph(xLabel, yLabel) {
 	// FILTERS
 	filters = d3.select('#filters')
 
+	// Add public/private filtering
 	controls = ['All', 'Public', 'Private']	
 	filters
-		.append('p')
+		.append('span')
 		.text('Public/Private: ')
 		.append('select')
 		.on('change', function() {
-			if (this.value === 'All') {
-				chart.selectAll('circle')
-					.transition()
-					.duration(Math.random() * 1000)
-					.style('opacity', 1)
-			} else {
-				chart.selectAll('circle')
-					.filter(d => d.Control !== this.value)
-					.transition()
-					.duration(Math.random() * 1000)
-					.style('opacity', 0)
-				chart.selectAll('circle')
-					.filter(d => d.Control === this.value)
-					.transition()
-					.duration(Math.random() * 1000)
-					.style('opacity', 1)
-			}
+			filter(chart, 'Control', this.value);
 		})
 		.selectAll('option')
 		.data(controls)
 		.enter()
 		.append('option')
 			.text(d => d)
+
+	// Region filtering
+	regions = ['All', 'Far West', 'Great Lakes', 'Great Plains', 'Mid-Atlantic',
+	'New England', 'Outlying Areas', 'Rocky Mountains', 'Southeast', 'Southwest']	
+	filters
+		.append('span')
+		.text('Region: ')
+		.append('select')
+		.on('change', function() {
+			filter(chart, 'Region', this.value);
+		})
+		.selectAll('option')
+		.data(regions)
+		.enter()
+		.append('option')
+			.text(d => d)
+}
+
+function filter(chart, filterAttribute, value) {
+	if (value === 'All') {
+		chart.selectAll('circle')
+			.transition()
+			.duration(Math.random() * 1000)
+			.style('opacity', 1)
+	} else {
+		chart.selectAll('circle')
+			.filter(d => d[filterAttribute] !== value)
+			.transition()
+			.duration(Math.random() * 1000)
+			.style('opacity', 0)
+		chart.selectAll('circle')
+			.filter(d => d[filterAttribute] === value)
+			.transition()
+			.duration(Math.random() * 1000)
+			.style('opacity', 1)
+	}
 }
 
 function updateZoom() {

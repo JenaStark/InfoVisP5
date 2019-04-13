@@ -1,6 +1,6 @@
 # InfoVisP5				
 TODO:
-* filter by region
+* get filters to work together
 * filter by cost
 * filter by scores
 * Reset filters?

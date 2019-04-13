@@ -98,3 +98,7 @@ hr {
     max-width: 30%;
     margin-left: 0px;
 }
+
+#filters > span {
+	padding: 10px 10px 10px 10px;
+}
