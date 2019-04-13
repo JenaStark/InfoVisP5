@@ -39,8 +39,20 @@ function fillDetails(datapoint, i) {
 
   var entries = d3.entries(datapoint);
   var enterSelection = d3.select('#details').selectAll('div').data(entries).enter().append('div')
-  enterSelection.insert('strong').text((d) => d.key + ':');
-  enterSelection.insert('span').text((d) => d.value);
+  enterSelection.insert('strong').text((d) => d.key + ':')
+    .style('color', d => {
+      if (d.key === xAttribute || d.key === yAttribute) {
+        return 'red'
+      }
+      return 'black'
+    });
+  enterSelection.insert('span').text((d) => d.value)
+    .style('color', d => {
+      if (d.key === xAttribute || d.key === yAttribute) {
+        return 'red'
+      }
+      return 'black'
+    });
 }
 
 function drawGraph(button) {
@@ -185,7 +197,7 @@ function actualDrawGraph(xLabel, yLabel) {
     .attr('id', 'ControlFilter')
     .on('change', function () {
       setFilters.set("Control", this.value)
-      filter(chart, setFilters);
+      filter(chart);
     })
     .selectAll('option')
     .data(controls)
@@ -194,8 +206,9 @@ function actualDrawGraph(xLabel, yLabel) {
       .text(d => d)
 
   // Region filtering
-  regions = ['All', 'Far West', 'Great Lakes', 'Great Plains', 'Mid-Atlantic',
-  'New England', 'Outlying Areas', 'Rocky Mountains', 'Southeast', 'Southwest']	
+  regions = ['All']
+  regions.push(...d3.set(cleanData, (d) => d.Region).values())
+
   filters
     .append('span')
     .text('Region: ')
@@ -203,13 +216,68 @@ function actualDrawGraph(xLabel, yLabel) {
     .attr('id', 'RegionFilter')
     .on('change', function () {
       setFilters.set("Region", this.value)
-      filter(chart, setFilters);
+      filter(chart);
     })
     .selectAll('option')
     .data(regions)
     .enter()
     .append('option')
       .text(d => d)
+
+  // SAT score
+  scoreExtent = d3.extent(cleanData, (d) => d['SAT Average']);
+  scoreHolder = filters.append('p').text('SAT Score: ')
+  scoreHolder.append('strong')
+    .text(scoreExtent[0])
+  scoreHolder.append('input')
+    .attr('min', scoreExtent[0])
+    .attr('max', scoreExtent[1])
+    .attr('id', 'scoreSlider')
+    .attr('type', 'range')
+    .on('input', function () {
+      filters.select('#scoreVal')
+        .property('value', this.value)
+      setFilters.set('SAT Average', this.value)
+      filter(chart)
+    })
+  scoreHolder.append('strong')
+    .text(scoreExtent[1])
+  scoreHolder.append('br')
+  scoreHolder
+    .append('input')
+    .attr('type', 'number')
+    .attr('id', 'scoreVal')
+    .on('change', function () {
+      filters.select('#scoreSlider')
+        .property('value', this.value)
+    })
+
+
+  budgetExtent = d3.extent(cleanData, (d) => d['Average Family Income']);
+  budgetHolder = filters.append('p').text('Budget: ')
+  budgetHolder.append('strong')
+    .text(budgetExtent[0])
+  budgetHolder.append('input')
+    .attr('min', budgetExtent[0])
+    .attr('max', budgetExtent[1])
+    .attr('id', 'budgetSlider')
+    .attr('type', 'range')
+    .on('input', function () {
+      filters.select('#budgetVal')
+        .property('value', this.value)
+      setFilters.set('Average Family Income', this.value)
+      filter(chart)
+    })
+  budgetHolder.append('strong')
+    .text(budgetExtent[1])
+  budgetHolder.append('br')
+  budgetHolder.append('input')
+    .attr('type', 'number')
+    .attr('id', 'budgetVal')
+    .on('input', function () {
+      filters.select('#budgetSlider')
+        .property('value', this.value)
+    })
 
   // reset filters
   filters.append('p')
@@ -227,24 +295,38 @@ function actualDrawGraph(xLabel, yLabel) {
         .duration(600)
         .style('opacity', 1)
     });
+
+  
 }
 
-function filter(chart, filters) {
-  circles = chart.selectAll('circle')
-  // for each filter set go through and add each one to the selection
-  filters.each(function (v, k) {
-    if (v === 'All') {
-      circles = circles
-        .style('opacity', 1)
-    } else {
-      circles
-        .filter(d => d[k] !== v)
-        .style('opacity', 0)
-      circles = circles
-        .filter(d => d[k] === v)
-        .style('opacity', 1)
-    }
-  })
+function filter(chart) {
+  setTimeout(() => {
+    circles = chart.selectAll('circle')
+    // for each filter set go through and add each one to the selection
+    setFilters.each(function (v, k) {
+      if (v === 'All') {
+        circles = circles
+          .style('opacity', 1)
+      } else {
+
+        if (isNaN(v)) {
+          circles
+            .filter(d => d[k] !== v)
+            .style('opacity', 0)
+          circles = circles
+            .filter(d => d[k] === v)
+            .style('opacity', 1)
+        } else {
+          circles
+            .filter(d => d[k] > v)
+            .style('opacity', 0)
+          circles
+            .filter(d => d[k] <= v)
+            .style('opacity', 1)
+        }
+      }
+    })
+  }, 200)
 }
 
 function updateZoom() {
