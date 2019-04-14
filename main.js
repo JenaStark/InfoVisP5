@@ -27,12 +27,42 @@ function start() {
     return d;
   }, function(csv){
     data = csv;
+    // draw public/private legend
+    drawLegend();
     // Draw default chart
     // Important to have this only be drawn after data is loaded so leave in this function
     actualDrawGraph('SAT Average', 'Average Cost');
+    // user instructions
     alert('Welcome to CollegeVisualizer! \n\nUse the various charts and ' + 
       'compare colleges to find the perfect college for you.');
   });
+}
+
+function drawLegend() {
+  svg = d3.select('#legend')
+      .append('svg')
+      .attr('width', 150)
+      .attr('height', 30);
+    svg.append("circle")
+      .attr('fill', 'green')
+      .attr("stroke", "black")
+      .attr("cx",6)
+      .attr("cy", 6)
+      .attr("r", 5);
+    svg.append('text')
+      .text('= Private College')
+      .attr("x", 14)
+      .attr("y", 10);
+    svg.append("circle")
+      .attr('fill', 'orange')
+      .attr("stroke", "black")
+      .attr("cx",6)
+      .attr("cy", 20)
+      .attr("r", 5)
+    svg.append('text')
+      .text('= Public College')
+      .attr("x", 14)
+      .attr("y", 24);
 }
 
 function clearSelection(modalNumber) {
