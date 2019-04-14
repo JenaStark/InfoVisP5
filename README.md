@@ -5,9 +5,6 @@ TODO:
 * change placement or style of axis labels - kind of hard to see when overlapped.
 * color selections, circles better
 * no need for college name to be there twice on details
-* instructions for user - maybe just a quick popup
-* Maybe have a button for college comparision because if you close a tab and want to see the same college again then you
-have to click on a different one first to trigger the on change
 
 Maybes:
 * fix inconsistencies on sliders between charts? - the values on the sliders change probably because of how we exclude points that are zero.

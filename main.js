@@ -30,6 +30,8 @@ function start() {
     // Draw default chart
     // Important to have this only be drawn after data is loaded so leave in this function
     actualDrawGraph('SAT Average', 'Average Cost');
+    alert('Welcome to CollegeVisualizer! \n\nUse the various charts and ' + 
+      'compare colleges to find the perfect college for you.');
   });
 }
 
@@ -365,7 +367,7 @@ function actualDrawGraph(xLabel, yLabel) {
     })
 
 
-  budgetExtent = d3.extent(cleanData, (d) => d['Average Family Income']);
+  budgetExtent = d3.extent(cleanData, (d) => d['Average Cost']);
   budgetHolder = filters.append('p').text('Budget: ')
   budgetHolder.append('strong')
     .text(budgetExtent[0])
@@ -377,7 +379,7 @@ function actualDrawGraph(xLabel, yLabel) {
     .on('input', function () {
       filters.select('#budgetVal')
         .property('value', this.value)
-      setFilters.set('Average Family Income', this.value)
+      setFilters.set('Average Cost', this.value)
       filter(chart)
     })
   budgetHolder.append('strong')
