@@ -270,12 +270,6 @@ function actualDrawGraph(xLabel, yLabel) {
   filters.select('#CollegeSelector1')
     .append('input')
     .attr('list', 'datalist')
-    .on("change", function () {
-      college = chart.selectAll('circle').filter(d => d.Name == this.value)
-      if(college) {
-        fillDetails(college.data()[0], college.attr('id'), '1');
-      }
-    });
 
   // second college
   filters
@@ -287,12 +281,21 @@ function actualDrawGraph(xLabel, yLabel) {
   filters.select('#CollegeSelector2')
     .append('input')
     .attr('list', 'datalist')
-    .on("change", function () {
-      college = chart.selectAll('circle').filter(d => d.Name == this.value)
-      if(college) {
-        fillDetails(college.data()[0], college.attr('id'), '2');
+
+  filters
+    .append('p')
+    .append('button')
+    .text('Compare Colleges')
+    .on('click', () => {
+      var collegeName1 = filters.select('#CollegeSelector1 input').property('value');
+      var collegeName2 = filters.select('#CollegeSelector2 input').property('value');
+      if (collegeName1 && collegeName2) {
+        var college1 = chart.selectAll('circle').filter(d => d.Name === collegeName1);
+        var college2 = chart.selectAll('circle').filter(d => d.Name === collegeName2);
+        fillDetails(college1.data()[0], college1.attr('id'), '1')
+        fillDetails(college2.data()[0], college2.attr('id'), '2')
       }
-    });
+    })
 
   filters.append('h3').text('Filters: ');
 
