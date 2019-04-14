@@ -34,23 +34,24 @@ strong {
 	margin-right: 5px;
 }
 
-.modal {
+.modal1, .modal2{
 	display: none; /* Hidden by default */
 	overflow: auto; /* Enable scroll if needed */
 	max-height: 500px;
 	bottom: 0;
 	right: 0;
 	margin-right: 20px;
+	max-width: 250px;
 }
 
-.content {
+.content1, .content2 {
 	bottom: 0;
 	background-color: #fefefe;
 	margin-top: 28px;
 }
 
 /* The Close Button */
-.close {
+.close1, .close2 {
 	color: red;
 	float: left;
 	font-size: 24px;
@@ -58,8 +59,9 @@ strong {
 	font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close1:hover,
+.close1:focus, .close2:hover,
+.close2:focus {
 	color: #000;
 	text-decoration: none;
 	cursor: pointer;

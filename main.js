@@ -1,6 +1,6 @@
 var width = 600;
 var height = 600;
-var data, div, selectedCircle;
+var data, div, selectedCircle1, selectedCircle2;
 var setFilters = d3.map();
 
 window.onload = start;
@@ -11,8 +11,11 @@ function start() {
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-  d3.select('.close')
-    .on('click', clearSelection)
+  d3.select('.close1')
+    .on('click', function() {clearSelection('1')})
+
+  d3.select('.close2')
+    .on('click', function() {clearSelection('2')})
 
   // load all the data in
   d3.csv("colleges.csv", function(d) {
@@ -30,41 +33,66 @@ function start() {
   });
 }
 
-function clearSelection() {
-  if (selectedCircle) {
-    selectedCircle
-      .attr('r', 5)
-      .attr('fill', (d) => {
-        if (d.Control == 'Public') {
-          return "orange";
-        }
-        return "green";
-      });
-    d3.select('.modal').style('display', 'none');
-    selectedCircle = null;
-  }
+function clearSelection(modalNumber) {
+  // clear first details pane
+  if (modalNumber == '1') {
+    if (selectedCircle1) {
+      selectedCircle1
+        .attr('r', 5)
+        .attr('fill', (d) => {
+          if (d.Control == 'Public') {
+            return "orange";
+          }
+          return "green";
+        });
+      d3.select('.modal1').style('display', 'none');
+      selectedCircle1 = null;
+    } 
+  } else {
+      // clear second details pane
+      if (selectedCircle2) {
+      selectedCircle2
+        .attr('r', 5)
+        .attr('fill', (d) => {
+          if (d.Control == 'Public') {
+            return "orange";
+          }
+          return "green";
+        });
+      d3.select('.modal2').style('display', 'none');
+      selectedCircle2 = null;
+      }
+    }
 }
 
-function fillDetails(datapoint, i) {
-  clearSelection();
-  d3.selectAll('#details > *').remove()
-  d3.select('.modal')
+function fillDetails(datapoint, i, modalNumber) {
+  clearSelection(modalNumber);
+
+  d3.selectAll('#details' + modalNumber + ' > *').remove()
+  d3.select('.modal' + modalNumber)
     .style('display', 'inline-block')
-  selectedCircle = chart.select(`[id='${i}'`)
+  if (modalNumber == '1') {
+    selectedCircle1 = chart.select(`[id='${i}'`)
     .attr('r', 10)
     .attr('fill', 'red')
     .raise()
+  } else {
+    selectedCircle2 = chart.select(`[id='${i}'`)
+    .attr('r', 10)
+    .attr('fill', 'red')
+    .raise()
+  }
 
   // Title
-  d3.select('#details')
+  d3.select('#details' + modalNumber)
     .append('h2')
     .text(datapoint['Name'])
-  d3.select('#details')
+  d3.select('#details' + modalNumber)
     .append('hr')
     .attr('class', 'style-three')
   // Content
   var entries = d3.entries(datapoint);
-  var enterSelection = d3.select('#details').selectAll('div').data(entries).enter().append('div')
+  var enterSelection = d3.select('#details' + modalNumber).selectAll('div').data(entries).enter().append('div')
   enterSelection.insert('strong').text((d) => d.key + ':')
     .style('color', d => {
       if (d.key === xAttribute || d.key === yAttribute) {
@@ -121,9 +149,11 @@ function actualDrawGraph(xLabel, yLabel) {
 
   // Remove old elements from chart
   d3.selectAll("#chart > *").remove();
-  d3.selectAll('#details > *').remove()
+  d3.selectAll('#details1 > *').remove()
+  d3.selectAll('#details2 > *').remove()
   d3.selectAll('#filters > *').remove();
-  clearSelection()
+  clearSelection('1')
+  clearSelection('2')
 
   // Add new svg
   chart = d3.select("#chart")
@@ -165,7 +195,9 @@ function actualDrawGraph(xLabel, yLabel) {
     .attr("cx", function (d) { return xScale(d[xLabel]); })
     .attr("cy", function (d) { return yScale(d[yLabel]); })
     .attr("r", 5)
-    .on("click", fillDetails)
+    .on("click", function (d, i) {
+      fillDetails(d, i,'1');
+    })
     .on("mouseover", function (d) {
       d3.select(this).attr('stroke', 'red').attr('stroke-width', '3px');
       div.transition()
@@ -238,6 +270,12 @@ function actualDrawGraph(xLabel, yLabel) {
   filters.select('#CollegeSelector1')
     .append('input')
     .attr('list', 'datalist')
+    .on("change", function () {
+      college = chart.selectAll('circle').filter(d => d.Name == this.value)
+      if(college) {
+        fillDetails(college.data()[0], college.attr('id'), '1');
+      }
+    });
 
   // second college
   filters
@@ -248,7 +286,13 @@ function actualDrawGraph(xLabel, yLabel) {
 
   filters.select('#CollegeSelector2')
     .append('input')
-    .attr('list', 'datalist');
+    .attr('list', 'datalist')
+    .on("change", function () {
+      college = chart.selectAll('circle').filter(d => d.Name == this.value)
+      if(college) {
+        fillDetails(college.data()[0], college.attr('id'), '2');
+      }
+    });
 
   filters.append('h3').text('Filters: ');
 
