@@ -125,8 +125,9 @@ function fillDetails(datapoint, i, modalNumber) {
     .append('hr')
     .attr('class', 'style-three')
   // Content
+  console.log(datapoint)
   var entries = d3.entries(datapoint);
-  var enterSelection = d3.select('#details' + modalNumber).selectAll('div').data(entries).enter().append('div')
+  var enterSelection = d3.select('#details' + modalNumber).selectAll('div').data(entries).enter().filter(d => d.key != 'Name').append('div')
   enterSelection.insert('strong').text((d) => d.key + ':')
     .style('color', d => {
       if (d.key === xAttribute || d.key === yAttribute) {
