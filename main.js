@@ -1,5 +1,7 @@
 var width = 600;
 var height = 600;
+var margin = {top: 20, left: 60, right: 30, bottom: 60};
+
 var data, div, selectedCircle1, selectedCircle2;
 var setFilters = d3.map();
 
@@ -173,8 +175,8 @@ function actualDrawGraph(xLabel, yLabel) {
   }; 
 
   // Axis setup
-  xScale = d3.scaleLinear().domain(xExtent).range([50, 570]);
-  yScale = d3.scaleLinear().domain(yExtent).range([570, 30]);
+  xScale = d3.scaleLinear().domain(xExtent).range([margin.left, width - margin.right]);
+  yScale = d3.scaleLinear().domain(yExtent).range([height - margin.bottom, margin.top]);
 
   xAxis = d3.axisBottom().scale(xScale);
   yAxis = d3.axisLeft().scale(yScale);
@@ -197,10 +199,10 @@ function actualDrawGraph(xLabel, yLabel) {
   var clip = chart.append("defs").append("chart:clipPath")
     .attr("id", "clip")
     .append("chart:rect")
-    .attr("width", width - 68) // using scale ranges and their translation to calculate this
-    .attr("height", height - 48)
-    .attr("x", 44)
-    .attr("y", 24);
+    .attr("width", width + 12 - margin.left - margin.right) // using scale ranges and their translation to calculate this
+    .attr("height", height + 12 - margin.bottom - margin.top)
+    .attr("x", margin.left - 6)
+    .attr("y", margin.top - 6);
 
   var clippedArea = chart.append('g')
     .attr("clip-path", "url(#clip)")
@@ -249,29 +251,33 @@ function actualDrawGraph(xLabel, yLabel) {
   // draw axis
   chart // or something else that selects the SVG element in your visualizations
     .append("g") // create a group node
-    .attr("transform", "translate(0," + (height - 30) + ")")
+    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
     .attr("class", "xaxis")
     .call(xAxis) // call the axis generator
     .append("text")
     .attr("class", "label")
-    .attr("x", width - 16)
-    .attr("y", -6)
-    .style("text-anchor", "end")
-    .text(xLabel);
+    .attr("transform",
+          "translate(" + ((width/2) + margin.right) + " ," + 
+                         (margin.bottom/2) + ")")
+    .style("text-anchor", "middle")
+    .text(xLabel)
+    .attr("font-weight", 700);
 
   // draw axis
   chart // or something else that selects the SVG element in your visualizations
     .append("g") // create a group node
-    .attr("transform", "translate(50, 0)")
+    .attr("transform", "translate(" + margin.left + ", 0)")
     .attr("class", "yaxis")
     .call(yAxis)
-    .append("text")
+  chart.append("text")
     .attr("class", "label")
     .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", ".71em")
-    .style("text-anchor", "end")
-    .text(yLabel);
+    .attr("y", 0)
+    .attr("x", 0 - (height / 2) + margin.bottom)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text(yLabel)
+    .attr("font-weight", 700); // make bold
 
   chart.call(zoom);
 
