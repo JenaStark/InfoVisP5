@@ -475,7 +475,7 @@ function filter(chart) {
           circles
             .filter(d => d[k] > v)
             .style('opacity', 0)
-          circles
+          circles = circles
             .filter(d => d[k] <= v)
             .style('opacity', 1)
         }
