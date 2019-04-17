@@ -286,7 +286,7 @@ function actualDrawGraph(xLabel, yLabel) {
   filters = d3.select('#filters')
 
   // College Selector
-  filters.append('h3').text('Compare Colleges:');
+  filters.append('h3').text('Search Colleges:');
   colleges = []
   colleges.push(...d3.set(cleanData, (d) => d.Name).values());
 
@@ -324,14 +324,16 @@ function actualDrawGraph(xLabel, yLabel) {
   filters
     .append('p')
     .append('button')
-    .text('Compare Colleges')
+    .text('Search')
     .on('click', () => {
       var collegeName1 = filters.select('#CollegeSelector1 input').property('value');
       var collegeName2 = filters.select('#CollegeSelector2 input').property('value');
-      if (collegeName1 && collegeName2) {
+      if (collegeName1) {
         var college1 = chart.selectAll('circle').filter(d => d.Name === collegeName1);
-        var college2 = chart.selectAll('circle').filter(d => d.Name === collegeName2);
         fillDetails(college1.data()[0], college1.attr('id'), '1')
+      }
+      if (collegeName2) {
+        var college2 = chart.selectAll('circle').filter(d => d.Name === collegeName2);
         fillDetails(college2.data()[0], college2.attr('id'), '2')
       }
     })
