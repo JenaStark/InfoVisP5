@@ -289,7 +289,8 @@ function actualDrawGraph(xLabel, yLabel) {
   filters = d3.select('#filters')
 
   // College Selector
-  filters.append('h3').text('Search Colleges (or left/right click the colleges to compare):');
+  filters.append('h3').text('Search Colleges:'); 
+  filters.append('h4').text('(or left/right click the colleges to compare):');
   colleges = []
   colleges.push(...d3.set(cleanData, (d) => d.Name).values());
 
