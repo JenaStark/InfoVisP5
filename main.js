@@ -290,7 +290,7 @@ function actualDrawGraph(xLabel, yLabel) {
 
   // College Selector
   filters.append('h3').text('Search Colleges:'); 
-  filters.append('h4').text('(or left/right click the colleges to compare):');
+  filters.append('h4').text('(or left/right click the colleges to compare)');
   colleges = []
   colleges.push(...d3.set(cleanData, (d) => d.Name).values());
 
@@ -443,7 +443,7 @@ function actualDrawGraph(xLabel, yLabel) {
   // reset filters
   filters.append('p')
     .append('button')
-    .text('Reset All Filters')
+    .text('Reset Filters')
     .on('click', function () {
       // change filter selection text to 'All'
       document.getElementById('ControlFilter').value = 'All';
