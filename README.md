@@ -1,6 +1,6 @@
 # InfoVisP5				
 TODO:
-* Comparision of colleges--> maybe add graphs
+* Style graph correctly and remove data included in pie chart from text
 * color selections, circles better
 
 Maybes:

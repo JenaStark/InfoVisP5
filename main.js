@@ -141,6 +141,43 @@ function fillDetails(datapoint, i, modalNumber) {
       }
       return 'black'
     });
+
+
+
+  racial = ['% White', '% Black', '% Hispanic', '% Asian', '% American Indian', '% Pacific Islander', '% Biracial']
+
+  pieData = d3.entries(datapoint)
+    .filter((pair) => racial.includes(pair.key));
+
+  var arc = d3.arc()
+    .outerRadius(50)
+    .innerRadius(0)
+  
+  var pie = d3.pie()
+    .value((d) => d.value);
+  
+  var arcs = d3.select('#details' + modalNumber)
+    .append('svg')
+    .append('g')
+      .attr('transform', 'translate(100,80)')
+    .selectAll('g')
+    .data(pie(pieData))
+    .enter()
+    .append('g')
+
+  arcs.append('path')
+    .attr('d', arc)
+    .attr('fill', (d, i) => d3.schemeCategory10[i]);
+  
+  arcs.append('text')
+    .attr('transform', (d) => {
+      d.innerRadius = 0;
+      d.outerRadius = 50;
+      return "translate(" + arc.centroid(d) + ")";
+    })
+    .attr('text-anchor', 'middle')
+    .text((d) => d.data.key)
+  
 }
 
 function drawGraph(button) {
