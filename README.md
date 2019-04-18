@@ -1,6 +1,5 @@
 # InfoVisP5				
 TODO:
-* Show x and y value details on hover, or project line on axis, or highlight x and y axis values in details view
 * Comparision of colleges--> maybe add graphs
 * color selections, circles better
 

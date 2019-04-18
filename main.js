@@ -400,9 +400,11 @@ function actualDrawGraph(xLabel, yLabel) {
     .append('input')
     .attr('type', 'number')
     .attr('id', 'scoreVal')
-    .on('change', function () {
+    .on('input', function () {
       filters.select('#scoreSlider')
         .property('value', this.value)
+        setFilters.set('SAT Average', this.value)
+        filter(chart)
     })
 
 
@@ -430,6 +432,8 @@ function actualDrawGraph(xLabel, yLabel) {
     .on('input', function () {
       filters.select('#budgetSlider')
         .property('value', this.value)
+        setFilters.set('Average Cost', this.value)
+        filter(chart)
     })
 
   // reset filters
