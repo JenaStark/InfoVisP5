@@ -125,7 +125,6 @@ function fillDetails(datapoint, i, modalNumber) {
     .append('hr')
     .attr('class', 'style-three')
   // Content
-  console.log(datapoint)
   var entries = d3.entries(datapoint);
   var enterSelection = d3.select('#details' + modalNumber).selectAll('div').data(entries).enter().filter(d => d.key != 'Name').append('div')
   enterSelection.insert('strong').text((d) => d.key + ':')
@@ -231,7 +230,11 @@ function actualDrawGraph(xLabel, yLabel) {
     .attr("cy", function (d) { return yScale(d[yLabel]); })
     .attr("r", 5)
     .on("click", function (d, i) {
-      fillDetails(d, i,'1');
+      fillDetails(d, i, '1');
+    })
+    .on('contextmenu', function (d, i) {
+      d3.event.preventDefault();
+      fillDetails(d, i, '2');
     })
     .on("mouseover", function (d) {
       d3.select(this).attr('stroke', 'red').attr('stroke-width', '3px');
@@ -286,7 +289,7 @@ function actualDrawGraph(xLabel, yLabel) {
   filters = d3.select('#filters')
 
   // College Selector
-  filters.append('h3').text('Search Colleges:');
+  filters.append('h3').text('Search Colleges (or left/right click the colleges to compare):');
   colleges = []
   colleges.push(...d3.set(cleanData, (d) => d.Name).values());
 
